@@ -25,7 +25,10 @@ st.caption('Upload your PDF files and chat with them. Try it out!\n\nWARNING: Th
 
 uploaded_files = st.file_uploader('Upload Your Documents', type=('pdf'), accept_multiple_files=True)
 
+# Ensure files are uploaded and API key is enetered before running chat functionalities.
 if uploaded_files and openai_api_key:
+
+    # Extract text from documents
     raw_text_docs = []
     for file in uploaded_files:
         raw_text = ''
@@ -36,6 +39,7 @@ if uploaded_files and openai_api_key:
             doc =  Document(page_content=raw_text, metadata={"source": "local"})
             raw_text_docs.append(doc)
 
+    # Preprocess text
     def preprocess_text(docs):
         with st.spinner('Preprocessing Documents...'):
             preprocessed_docs = [*docs]
@@ -46,6 +50,7 @@ if uploaded_files and openai_api_key:
 
     processed_texts = preprocess_text(raw_text_docs)
 
+    # Create chunks
     def split_text(docs):
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1500,
@@ -59,15 +64,6 @@ if uploaded_files and openai_api_key:
 
     chunked_texts = split_text(processed_texts)
 
-    # Have to declare db before actually saving so we can force clear it.
-    db = Chroma.from_documents(chunked_texts[:3],OpenAIEmbeddings())
-
-    db.delete_collection()
-    with st.spinner('Saving Chunks...'):
-        db = Chroma.from_documents(chunked_texts,OpenAIEmbeddings())
-    print(f'Chroma saved {len(chunked_texts)} chunks.')
-
-
     prompt_template = ChatPromptTemplate.from_template(
         """
         Answer the question based on the following context:\n
@@ -77,29 +73,38 @@ if uploaded_files and openai_api_key:
         """
     )
 
+    # Display intro message if no messages have been sent by the user.
     if 'messages' not in st.session_state:
         st.session_state['messages'] = [{'role': 'assistant', 'content': 'Ask away!'}]
 
+    # Write each message to the screen
     for msg in st.session_state.messages:
         st.chat_message(msg['role']).write(msg['content'])
 
     if prompt := st.chat_input():
         # Have to declare db before actually saving so we can force clear it.
-        db = Chroma.from_documents(chunked_texts[:1],OpenAIEmbeddings())
-
+        db = Chroma.from_documents(chunked_texts[:3],OpenAIEmbeddings())
         db.delete_collection()
+    
+        # Save chunks to Chroma.
         with st.spinner('Saving Chunks...'):
             db = Chroma.from_documents(chunked_texts,OpenAIEmbeddings())
         print(f'Chroma saved {len(chunked_texts)} chunks.')
 
         llm = OpenAI(api_key=openai_api_key)
+        # Search for relevant context.
         relevant_chunks = db.similarity_search_with_relevance_scores(prompt,k=3)
         context_text = '\n\n---\n\n'.join([doc.page_content for doc, _score in relevant_chunks])
         print(context_text)
+        
+        # Format prompt with context and question.
         formatted_prompt = [{'role': 'user', 'content': prompt_template.format(context=context_text, question=prompt)}]
+        # Save response
         response = llm.chat.completions.create(model='gpt-3.5-turbo-1106', messages=formatted_prompt, temperature=0.4)
+        # Insert unformatted prompt into the session states messages.
         st.session_state.messages.append({'role': 'user', 'content': prompt})
         st.chat_message('user').write(prompt)
+        # Insert final response to the session.
         msg = response.choices[0].message.content
         st.session_state.messages.append({'role': 'assistant', 'content': msg})
         st.chat_message('assistant').write(msg)
