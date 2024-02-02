@@ -70,10 +70,10 @@ if uploaded_files and openai_api_key:
 
     prompt_template = ChatPromptTemplate.from_template(
         """
-        Answer the question based only on the following context:\n
+        Answer the question based on the following context:\n
         {context}
         ---
-        Answer the question based on the above context and only the above context (do not mention the context): {question}
+        Answer the question based on the above context (do not mention the context): {question}
         """
     )
 
