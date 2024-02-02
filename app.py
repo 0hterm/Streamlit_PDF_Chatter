@@ -59,7 +59,7 @@ if uploaded_files and openai_api_key:
     chunked_texts = split_text(processed_texts)
 
     # Have to declare db before actually saving so we can force clear it.
-    db = Chroma.from_documents([Document(page_content='delete')],OpenAIEmbeddings())
+    db = Chroma.from_documents(chunked_texts[:3],OpenAIEmbeddings())
 
     db.delete_collection()
     with st.spinner('Saving Chunks...'):
@@ -83,6 +83,14 @@ if uploaded_files and openai_api_key:
         st.chat_message(msg['role']).write(msg['content'])
 
     if prompt := st.chat_input():
+        # Have to declare db before actually saving so we can force clear it.
+        db = Chroma.from_documents(chunked_texts[:1],OpenAIEmbeddings())
+
+        db.delete_collection()
+        with st.spinner('Saving Chunks...'):
+            db = Chroma.from_documents(chunked_texts,OpenAIEmbeddings())
+        print(f'Chroma saved {len(chunked_texts)} chunks.')
+
         llm = OpenAI(api_key=openai_api_key)
         relevant_chunks = db.similarity_search_with_relevance_scores(prompt,k=3)
         context_text = '\n\n---\n\n'.join([doc.page_content for doc, _score in relevant_chunks])
