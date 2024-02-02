@@ -89,7 +89,7 @@ if uploaded_files and openai_api_key:
         context_text = '\n\n---\n\n'.join([doc.page_content for doc, _score in relevant_chunks])
         print(context_text)
         formatted_prompt = [{'role': 'user', 'content': prompt_template.format(context=context_text, question=prompt)}]
-        response = llm.chat.completions.create(model='gpt-3.5-turbo-1106', messages=formatted_prompt, temperature=0.1)
+        response = llm.chat.completions.create(model='gpt-3.5-turbo-1106', messages=formatted_prompt, temperature=0.4)
         st.session_state.messages.append({'role': 'user', 'content': prompt})
         st.chat_message('user').write(prompt)
         msg = response.choices[0].message.content
