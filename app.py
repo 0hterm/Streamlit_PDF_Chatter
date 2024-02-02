@@ -59,7 +59,7 @@ if uploaded_files and openai_api_key:
     chunked_texts = split_text(processed_texts)
 
     # Have to declare db before actually saving so we can force clear it.
-    db = Chroma.from_documents(chunked_texts,OpenAIEmbeddings())
+    db = Chroma.from_documents([Document(page_content='delete')],OpenAIEmbeddings())
 
     db.delete_collection()
     with st.spinner('Saving Chunks...'):
