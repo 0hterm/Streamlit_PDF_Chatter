@@ -100,7 +100,7 @@ if uploaded_files and openai_api_key:
         # Format prompt with context and question.
         formatted_prompt = [{'role': 'user', 'content': prompt_template.format(context=context_text, question=prompt)}]
         # Save response
-        response = llm.chat.completions.create(model='gpt-3.5-turbo-1106', messages=formatted_prompt, temperature=0.4)
+        response = llm.chat.completions.create(model='gpt-3.5-turbo-1106', messages=formatted_prompt, temperature=0.3)
         # Insert unformatted prompt into the session states messages.
         st.session_state.messages.append({'role': 'user', 'content': prompt})
         st.chat_message('user').write(prompt)
