@@ -21,7 +21,7 @@ with st.sidebar:
 os.environ['OPENAI_API_KEY'] = openai_api_key
 
 st.title('PDF Chatter 📄🔴')
-st.caption('Upload your PDF files and chat with them. Try it out!\n\nWARNING: The greater the size of documents, the longer it will take to process and the higher embedding function costs will be.')
+st.caption('Upload your PDF files and chat with them. Try it out!\n\nWARNING: The greater the size of documents, the longer it will take to process and the higher embedding costs will be.')
 
 uploaded_files = st.file_uploader('Upload Your Documents', type=('pdf'), accept_multiple_files=True)
 
