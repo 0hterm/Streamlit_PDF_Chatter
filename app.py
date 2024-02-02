@@ -8,10 +8,11 @@ from langchain.prompts.chat import ChatPromptTemplate
 from langchain.docstore.document import Document
 import pdfplumber
 import nltk
-from nltk.tokenize import word_tokenize
 import os
 import shutil
-nltk.download('punkt')
+__import__ ('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 with st.sidebar:
     openai_api_key = st.text_input('OpenAI API Key',key='chatbot_api_key',type='password')
