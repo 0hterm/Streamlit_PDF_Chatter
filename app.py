@@ -46,16 +46,15 @@ if uploaded_files and openai_api_key:
     processed_texts = preprocess_text(raw_text_docs)
 
     def split_text(docs):
-        with st.spinner('Splitting Documents...'):
-            text_splitter = RecursiveCharacterTextSplitter(
-                chunk_size=1000,
-                chunk_overlap=400,
-                length_function = len,
-                add_start_index=True
-            )
-            chunks = text_splitter.split_documents(docs)
-            print(f'Split {len(docs)} documents into {len(chunks)} chunks.')
-            return chunks
+        text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=1500,
+            chunk_overlap=500,
+            length_function = len,
+            add_start_index=True
+        )
+        chunks = text_splitter.split_documents(docs)
+        print(f'Split {len(docs)} documents into {len(chunks)} chunks.')
+        return chunks
 
     chunked_texts = split_text(processed_texts)
 
