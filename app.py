@@ -16,6 +16,8 @@ nltk.download('punkt')
 with st.sidebar:
     openai_api_key = st.text_input('OpenAI API Key',key='chatbot_api_key',type='password')
 
+os.environ['OPENAI_API_KEY'] = openai_api_key
+
 st.title('PDF Chatter 📄🔴')
 st.caption('Upload your PDF files and chat with them. Try it out!')
 
