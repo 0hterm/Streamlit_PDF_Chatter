@@ -1,7 +1,7 @@
 import streamlit as st
 from openai import OpenAI
 import langchain
-from langchain.text_splitter import CharacterTextSplitter, RecursiveCharacterTextSplitter
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
 from langchain_openai import OpenAIEmbeddings
 from langchain.prompts.chat import ChatPromptTemplate
