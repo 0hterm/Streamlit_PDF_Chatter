@@ -10,9 +10,6 @@ import pdfplumber
 import nltk
 import os
 import shutil
-# Below is needed to run on Streamlit Community Cloud
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 if 'db' not in st.session_state:
     st.session_state['db'] = ''
