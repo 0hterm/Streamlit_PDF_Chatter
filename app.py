@@ -11,7 +11,6 @@ import nltk
 import os
 import shutil
 # Below is needed to run on Streamlit Community Cloud
-__import__ ('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
