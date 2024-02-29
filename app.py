@@ -11,8 +11,9 @@ import nltk
 import os
 import shutil
 # Below needed to run on Streamlit Cloud
-import sqlite3
-
+__import__ ('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 if 'db' not in st.session_state:
     st.session_state['db'] = ''
