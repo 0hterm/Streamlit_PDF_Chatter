@@ -1,7 +1,7 @@
 # Streamlit App:
 https://gpt-with-pdf.streamlit.app
 
-<img src='https://i.imgur.com/nMEiJNg.png' />
+<img src='https://imgur.com/a/Yqy8eBW' />
 
 # Get it running locally
 * Clone the repo.
